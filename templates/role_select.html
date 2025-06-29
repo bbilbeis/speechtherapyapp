@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Who are you?</h2>
+  <form method="post">
+    <label><input type="radio" name="role" value="patient" checked> Patient</label><br>
+    <label><input type="radio" name="role" value="caregiver"> Caregiver</label><br>
+    <button type="submit">Continue</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div id="session-container"
+       data-initial="{{ 'true' if session.get('selected') else 'false' }}">
+    {% for ex in exercises %}
+      <div class="exercise {% if not loop.first %}inactive-right{% endif %}"
+           data-index="{{ loop.index0 }}">
+        <h2>Exercise {{ loop.index }}: {{ ex.name }}</h2>
+        <img src="{{ ex.image_url }}" alt="{{ ex.name }}" class="ex-image">
+        <p>[Placeholder for exercise tests]</p>
+        <button type="button" class="done-btn">Done</button>
+      </div>
+    {% endfor %}
+
+    <div id="transition-overlay">
+      <h2 id="transition-message"></h2>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

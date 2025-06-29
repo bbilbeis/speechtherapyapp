@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Exercise History</h2>
+  {% if history %}
+    <ul>
+      {% for sess in history %}
+        <li>
+          {{ sess.timestamp }} — 
+          <ul>
+            {% for val in sess.performance %}
+              <li>{{ val }}%</li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No history yet.</p>
+  {% endif %}
+{% endblock %}
