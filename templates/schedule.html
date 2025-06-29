@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Schedule</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="center">
+    <h2>Pick a time</h2>
+    <form method="post">
+      {% for t in times %}
+        <label><input type="radio" name="time" value="{{ t }}"> {{ t }}</label><br>
+      {% endfor %}
+      <button>Next</button>
+    </form>
+  </div>
+</body>
+</html>

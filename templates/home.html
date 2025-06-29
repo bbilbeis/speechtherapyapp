@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Mobile viewport meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="center">
+    <h2>Your Dashboard</h2>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-buttons">
+      <a href="{{ url_for('session_flow') }}"><button>Do Exercises</button></a>
+      <a href="{{ url_for('modify_exercises') }}"><button>Modify Exercises</button></a>
+      <a href="{{ url_for('schedule') }}"><button>Call Settings</button></a>
+      <a href="{{ url_for('home') }}"><button>Stats &amp; Leaderboard</button></a>
+    </div>
+
+    <!-- Overall Improvement Chart -->
+    <h3>Overall Improvement</h3>
+    <canvas id="perfChart" width="350" height="200"></canvas>
+
+    <!-- Section-by-Section Charts -->
+    <h3>Improvement by Section</h3>
+    <div class="section-charts">
+      {% for sec in sections %}
+      <div class="section-chart">
+        <h4>{{ sec.section }}</h4>
+        <canvas id="sectChart{{ loop.index0 }}" width="220" height="200"></canvas>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Chosen Exercises & Schedule -->
+    <h3>Chosen Exercises</h3>
+    <ul>
+      {% for ex in selected %}
+        <li>{{ ex }}</li>
+      {% else %}
+        <li><em>None selected</em></li>
+      {% endfor %}
+    </ul>
+    <h3>Preferred Time</h3>
+    <p>{{ schedule }}</p>
+
+    <!-- Leaderboard -->
+    <h3>Leaderboard</h3>
+    <ul class="leaderboard">
+      {% for user, score in leaderboard.items() %}
+        <li><strong>{{ user }}</strong>: {{ score }}%</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <script>
+    // Overall line chart
+    const ctx = document.getElementById('perfChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ labels|tojson }},
+        datasets: [{
+          label: 'Improvement %',
+          data: {{ data|tojson }},
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        layout: { padding: { top: -10 } },
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+
+    // Section bar charts
+    {% for sec in sections %}
+    new Chart(
+      document.getElementById('sectChart{{ loop.index0 }}').getContext('2d'),
+      {
+        type: 'bar',
+        data: {
+          labels: {{ sec.labels|tojson }},
+          datasets: [{
+            label: 'Improvement %',
+            data: {{ sec.data|tojson }},
+            borderWidth: 1
+          }]
+        },
+        options: {
+          layout: { padding: { top: -10 } },
+          plugins: {
+            legend: { display: false },
+            title: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true, max: 100 }
+          }
+        }
+      }
+    );
+    {% endfor %}
+  </script>
+</body>
+</html>
